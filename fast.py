@@ -87,19 +87,20 @@ def predict():
                                         'VL_LATITUDE': 'Latitude',
                                         'VL_LONGITUDE': 'Longitude'})
         #ajustar caminho para pegar os dados de maneira generica
-        alti = read_csv_to_api[read_csv_to_api['CodigoEstacao'] == codigoestacao]['Altitude'].values[0]
+        #alti = read_csv_to_api[read_csv_to_api['CodigoEstacao'] == codigoestacao]['Altitude'].values[0]
         #Adicionando coluna que nao veio da API do INMET
-        df['Altitude'] = alti
+       # df['Altitude'] = alti
         df = df.astype(float)
-        X_test = pd.DataFrame(df).to_numpy().reshape(1,48,20)
-        gcs_path = f'gs://rain-prediction-machine/models_v1/{nome_modelo}.joblib'
+        df = df.drop(columns = ['Latitude', 'Longitude'])
+        X_test = pd.DataFrame(df).to_numpy().reshape(1,48,17)
+        gcs_path = f'gs://rain-prediction-machine/models/{nome_modelo}.joblib'
         model = joblib.load(tf.io.gfile.GFile(gcs_path, 'rb')) #para ler um joblib precisa da ajuda do tensor flow
         y_pred = model.predict(X_test)
         # Ajustando o df para ler no front end
         df_pred = pd.DataFrame(y_pred)
         df_pred['dc_nome'] = dc_nome
-        df_pred['Latitude'] = df['Latitude']
-        df_pred['Longitude'] = df['Longitude']
+       # df_pred['Latitude'] = df['Latitude']
+       # df_pred['Longitude'] = df['Longitude']
         df['dc_nome'] = dc_nome
         lista_df.append(df_pred)
         lista_df_passado.append(df.to_dict())
