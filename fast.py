@@ -91,6 +91,8 @@ def predict():
         #Adicionando coluna que nao veio da API do INMET
        # df['Altitude'] = alti
         df = df.astype(float)
+        latitude = df['Latitude']
+        longitude = df['Longitude']
         df = df.drop(columns = ['Latitude', 'Longitude'])
         X_test = pd.DataFrame(df).to_numpy().reshape(1,48,17)
         gcs_path = f'gs://rain-prediction-machine/models/{nome_modelo}.joblib'
@@ -99,8 +101,8 @@ def predict():
         # Ajustando o df para ler no front end
         df_pred = pd.DataFrame(y_pred)
         df_pred['dc_nome'] = dc_nome
-       # df_pred['Latitude'] = df['Latitude']
-       # df_pred['Longitude'] = df['Longitude']
+        df_pred['Latitude'] = latitude
+        df_pred['Longitude'] = longitude
         df['dc_nome'] = dc_nome
         lista_df.append(df_pred)
         lista_df_passado.append(df)
