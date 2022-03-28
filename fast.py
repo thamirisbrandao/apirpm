@@ -103,11 +103,11 @@ def predict():
        # df_pred['Longitude'] = df['Longitude']
         df['dc_nome'] = dc_nome
         lista_df.append(df_pred)
-        lista_df_passado.append(df.to_dict())
+        lista_df_passado.append(df)
     pred_all_esta = pd.concat(lista_df)
     pred_all_esta.to_csv('exemplo_nat_all.csv')
     upload_csv_to_gcp('exemplo_nat_all.csv')
-    pd.DataFrame(lista_df_passado).to_csv('df_passad.csv')
+    pd.concat(lista_df_passado).to_csv('df_passad.csv')
     upload_csv_to_gcp('df_passad.csv')
     #concatenar todos os df pred
     #enviar o df pred concatenado para google cloud
